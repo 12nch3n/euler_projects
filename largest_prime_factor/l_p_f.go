@@ -1,24 +1,36 @@
 package main
 
-import "fmt"
+import (
+	"container/list"
+	"fmt"
+)
 
-func calc(x []int64) []int64 {
-	i := x[len(x)-2]
-	for i < x[len(x)-1] {
-		i++
-		if x[len(x)-1]%i == 0 && (x[len(x)-1] != i) {
-			var new_x = make([]int64, len(x)+1)
-			copy(new_x, x)
-			new_x[len(new_x)-2] = i
-			new_x[len(new_x)-1] = x[len(x)-1] / i
-			return calc(new_x)
+func Divide(x int64) (int64, int64) {
+	for i := int64(2); i < x; i++ {
+		if x%i == 0 {
+			return i, x / i
+		} else {
+			continue
 		}
 	}
-	return x
+	return 1, x
 }
 
 func main() {
-	primes := []int64{1, 600851475143}
-	primes = calc(primes)
-	fmt.Printf("ans: %d\n", primes[len(primes)-1])
+	primes := list.New()
+	primes.PushBack(int64(600851475143))
+	e := primes.Front()
+	for e != nil {
+		x1, x2 := Divide(e.Value.(int64))
+		if x1 != 1 {
+			primes.PushBack(x1)
+			primes.PushBack(x2)
+			e = e.Next()
+			primes.Remove(e.Prev())
+		} else {
+			fmt.Println(e.Value)
+			e = e.Next()
+		}
+	}
+	fmt.Println(primes.Back().Value)
 }
