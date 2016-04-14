@@ -2,6 +2,7 @@ package utils
 
 import (
 	"container/list"
+	"fmt"
 )
 
 func IsPrime(number int64, pKnownPrimes *list.Element) bool {
@@ -15,11 +16,13 @@ func IsPrime(number int64, pKnownPrimes *list.Element) bool {
 	return true
 }
 
-func FindPrimes(count int64) *list.List {
+func FindPrimes(max int64) *list.List {
 	primes := list.New()
-	var num int64 = 2
-	for int64(primes.Len()) < count {
+	var num int64 = 3
+	primes.PushBack(int64(2))
+	for num < max {
 		if IsPrime(num, primes.Front()) == true {
+			fmt.Printf("Prime <%d> Found.\n", num)
 			primes.PushBack(num)
 		}
 		num++
