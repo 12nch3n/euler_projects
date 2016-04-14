@@ -15,7 +15,22 @@ func Divide(x int64) (int64, int64) {
 	return 1, x
 }
 
-func DivideNumbers(num int64) *list.List {
+func Divisors(num int64) *list.List {
+	ret1 := list.New()
+	ret2 := list.New()
+	for i := int64(1); i*i <= num; i++ {
+		if num%i == 0 {
+			ret1.PushBack(i)
+			if i != num/i {
+				ret2.PushFront(num / i)
+			}
+		}
+	}
+	ret1.PushBackList(ret2)
+	return ret1
+}
+
+func MinDivisors(num int64) *list.List {
 	var ret = list.New()
 	ret.PushBack(num)
 	e := ret.Front()

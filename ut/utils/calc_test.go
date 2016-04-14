@@ -28,7 +28,25 @@ func TestDivide(t *testing.T) {
 	}
 }
 
-func TestDivideNumbers(t *testing.T) {
+func compare(length int, expected *[ARRAY_MAX_CAP]int64, actual *list.List) bool {
+	if length != actual.Len() {
+		return false
+	} else {
+		fmt.Printf("Expected %v\n", expected[:length])
+		index := 0
+		for e := actual.Front(); e != nil; e = e.Next() {
+			fmt.Printf("Compare index(%d): actual = %d \t expected = %d\n",
+				index, e.Value.(int64), expected[index])
+			if e.Value.(int64) != expected[index] {
+				return false
+			}
+			index++
+		}
+	}
+	return true
+}
+
+func TestMinDivisors(t *testing.T) {
 	var test_cases = []struct {
 		input    int64
 		length   int
@@ -40,26 +58,28 @@ func TestDivideNumbers(t *testing.T) {
 		{30, 3, [ARRAY_MAX_CAP]int64{2, 3, 5}},
 	}
 
-	compare := func(length int, expected *[ARRAY_MAX_CAP]int64, actual *list.List) bool {
-		if length != actual.Len() {
-			return false
-		} else {
-			fmt.Printf("Expected %v\n", expected[:length])
-			index := 0
-			for e := actual.Front(); e != nil; e = e.Next() {
-				fmt.Printf("Compare index(%d): actual = %d \t expected = %d\n",
-					index, e.Value.(int64), expected[index])
-				if e.Value.(int64) != expected[index] {
-					return false
-				}
-				index++
-			}
+	for _, mt := range test_cases {
+		actual := utils.MinDivisors(mt.input)
+		if compare(mt.length, &mt.expected, actual) == false {
+			t.Errorf("Dividenumbers of %d is incorrect.", mt.input)
 		}
-		return true
+	}
+}
+
+func TestDivisors(t *testing.T) {
+	var test_cases = []struct {
+		input    int64
+		length   int
+		expected [ARRAY_MAX_CAP]int64
+	}{
+		{1, 1, [ARRAY_MAX_CAP]int64{1}},
+		{2, 2, [ARRAY_MAX_CAP]int64{1, 2}},
+		{4, 3, [ARRAY_MAX_CAP]int64{1, 2, 4}},
+		{30, 8, [ARRAY_MAX_CAP]int64{1, 2, 3, 5, 6, 10, 15, 30}},
 	}
 
 	for _, mt := range test_cases {
-		actual := utils.DivideNumbers(mt.input)
+		actual := utils.Divisors(mt.input)
 		if compare(mt.length, &mt.expected, actual) == false {
 			t.Errorf("Dividenumbers of %d is incorrect.", mt.input)
 		}
