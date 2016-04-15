@@ -6,6 +6,29 @@ import (
 	"strings"
 )
 
+func edge_max(n int, m [][]int) int {
+	var max_edge int = 0
+	for i := 0; i+4 < n; i++ {
+		left := m[n][i] * m[n][i+1] * m[n][i+2] * m[n][i+3]
+		down := m[i][n] * m[i+1][n] * m[i+2][n] * m[i+3][n]
+		sideup := m[i][i] * m[i+1][i+1] * m[i+2][i+2] * m[i+3][i+3]
+		sidedown := m[n-i][i] * m[n-i][i+1] * m[n-i][i+2] * m[n-i][i+3]
+		if left > max_edge {
+			max_edge = left
+		}
+		if down > max_edge {
+			max_edge = down
+		}
+		if sideup > max_edge {
+			max_edge = sideup
+		}
+		if sidedown > max_edge {
+			max_edge = sidedown
+		}
+	}
+	return max_edge
+}
+
 func main() {
 	var ques []string = make([]string, 0, 100)
 	ques = append(ques,
@@ -38,7 +61,14 @@ func main() {
 			x, _ := strconv.Atoi(col)
 			num_row = append(num_row, x)
 		}
-		fmt.Println(num_row)
 		m = append(m, num_row)
 	}
+	var max int = 0
+	for i := 0; i < len(m); i++ {
+		edge := edge_max(i, m)
+		if edge > max {
+			max = edge
+		}
+	}
+	fmt.Printf("ans = %d\n", max)
 }
