@@ -8,16 +8,33 @@ import (
 
 func edge_max(n int, m [][]int) int {
 	var max_edge int = 0
-	for i := 0; i+4 < n; i++ {
-		left := m[n][i] * m[n][i+1] * m[n][i+2] * m[n][i+3]
-		down := m[i][n] * m[i+1][n] * m[i+2][n] * m[i+3][n]
-		sideup := m[i][i] * m[i+1][i+1] * m[i+2][i+2] * m[i+3][i+3]
-		sidedown := m[n-i][i] * m[n-i][i+1] * m[n-i][i+2] * m[n-i][i+3]
-		if left > max_edge {
-			max_edge = left
+	if n < 3 {
+		return 0
+	}
+	for i := 0; i <= n; i++ {
+		top_1 := m[n-3][i] * m[n-2][i] * m[n-1][i] * m[n][i]
+		right_1 := m[i][n-3] * m[i][n-2] * m[i][n-1] * m[i][n]
+		var top_2, right_2, sidedown, sideup int
+		if i+3 <= n {
+			top_2 = m[n][n-i] * m[n][n-i-1] * m[n][n-i-2] * m[n][n-i-3]
+			right_2 = m[n-i][n] * m[n-i-1][n] * m[n-i-2][n] * m[n-i-3][n]
+			sidedown = m[n][i] * m[n-1][i+1] * m[n-2][i+2] * m[n-3][i+3]
+			sideup = m[n-3][i] * m[n-2][i+1] * m[n-1][i+2] * m[n][i+3]
+		} else {
+			top_2, right_2, sidedown, sideup = 0, 0, 0, 0
 		}
-		if down > max_edge {
-			max_edge = down
+		fmt.Printf("n=%d\ti=%d\ttop_1=%d\ttop_2=%d\tright_1=%d\tright_2=%d\tsideup=%d\tsidedown=%d\n", n, i, top_1, top_2, right_1, right_2, sideup, sidedown)
+		if top_1 > max_edge {
+			max_edge = top_1
+		}
+		if top_2 > max_edge {
+			max_edge = top_2
+		}
+		if right_1 > max_edge {
+			max_edge = right_1
+		}
+		if right_2 > max_edge {
+			max_edge = right_2
 		}
 		if sideup > max_edge {
 			max_edge = sideup
